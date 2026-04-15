@@ -45,6 +45,60 @@ echo "=== INSTALL DEPENDENCIES ==="
 retry 5 apt update -y
 retry 5 apt install -y curl git openssh-client ca-certificates
 
+echo "=== INSTALL NGINX ==="
+retry 5 apt update
+retry 5 apt install -y nginx libnginx-mod-stream
+
+echo "=== STOP NGINX (CLEAN STATE) ==="
+systemctl stop nginx || true
+
+echo "=== CLEAN OLD NGINX CONFIG ==="
+rm -f /etc/nginx/sites-enabled/*
+rm -f /etc/nginx/sites-available/*
+rm -f /etc/nginx/conf.d/*
+
+echo "=== CONFIG NGINX HTTP (TRAEFIK) ==="
+cat <<EOF > /etc/nginx/conf.d/http-traefik.conf
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location / {
+        proxy_pass http://127.0.0.1:30080;
+
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOF
+
+echo "=== CLEAN OLD STREAM CONFIG ==="
+sed -i '/stream {/,$d' /etc/nginx/nginx.conf
+
+echo "=== CONFIG NGINX STREAM (HTTPS PASSTHROUGH) ==="
+cat <<EOF >> /etc/nginx/nginx.conf
+
+stream {
+    upstream traefik_https {
+        server 127.0.0.1:30443;
+    }
+
+    server {
+        listen 443;
+        proxy_pass traefik_https;
+    }
+}
+EOF
+
+echo "=== TEST NGINX ==="
+nginx -t
+
+echo "=== START NGINX ==="
+systemctl restart nginx
+systemctl enable nginx
+
 echo "=== FIX HOSTNAME ==="
 HOSTNAME=$(hostname)
 

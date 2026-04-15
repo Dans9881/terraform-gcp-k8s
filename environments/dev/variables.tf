@@ -52,3 +52,11 @@ variable "repo_url" {
   description = "Git repository URL for Kubernetes manifests"
   type        = string
 }
+
+variable "master_machine_type" {
+  type = string
+}
+
+variable "worker_machine_type" {
+  type = string
+}

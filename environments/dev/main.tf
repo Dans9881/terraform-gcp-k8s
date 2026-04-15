@@ -47,7 +47,7 @@ module "master" {
   source = "../../modules/vm"
 
   name         = "${var.vm_name}-master-${var.environment}"
-  machine_type = var.machine_type
+  machine_type = var.master_machine_type
   zone         = var.zone
 
   network    = module.network.network
@@ -67,11 +67,11 @@ module "master" {
 module "worker" {
   source = "../../modules/vm"
 
-  for_each = toset(["worker1", "worker2"])
+  for_each = toset(["worker1"])
   depends_on = [module.master]
 
   name         = "${var.vm_name}-${each.key}-${var.environment}"
-  machine_type = var.machine_type
+  machine_type = var.worker_machine_type
   zone         = var.zone
 
   network    = module.network.network
