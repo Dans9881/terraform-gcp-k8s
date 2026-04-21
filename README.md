@@ -1,54 +1,76 @@
-# Terraform K3s Infrastructure
+# 🚀 Terraform Kubernetes Infrastructure (GCP)
 
-Production-like Kubernetes cluster built on Google Cloud using Terraform with full automation.
+Production-grade Kubernetes cluster on Google Cloud using Terraform with fully automated provisioning.
 
-## Features
+---
+
+## ✨ Features
+
 - Modular Terraform (VM, Network, Firewall)
-- Automated K3s cluster provisioning (master + workers)
-- Multi-node Kubernetes cluster (scalable)
-- Automated application deployment via startup scripts
-- Ingress routing with Traefik + HTTPS (Let's Encrypt)
-- Advanced networking with Cilium (kube-proxy replacement)
-- Fault tolerance validated via node failure simulation
+- Multi-node Kubernetes cluster (control-plane + workers)
+- Automated provisioning via kubeadm (startup scripts)
+- Traefik Ingress + HTTPS (Let's Encrypt)
+- Cilium CNI (kube-proxy replacement)
+- Cloudflare DNS integration
+- Fault-tolerant (node failure tested)
+- Multi-environment support (`dev`, `staging`, `prod`)
 
-## Architecture
+---
 
- GCP VM (Master + Workers)
- ↓
- K3s Cluster
- ↓
- Cilium (CNI)
- ↓
- Traefik (Ingress Controller)
- ↓
- Cloudflare DNS + HTTPS
+## 🏗 Architecture
 
-## Related Repository
+GCP VM (Control Plane + Workers)  
+↓  
+Kubernetes Cluster (kubeadm)  
+↓  
+Cilium (CNI)  
+↓  
+Traefik (Ingress Controller)  
+↓  
+Cloudflare DNS + HTTPS  
 
-Kubernetes manifests & app deployment:
--> https://github.com/Dans9881/infra-k3s
+---
 
-## Requirements
+## 🔗 Related Repository
 
-- Terraform >= 1.0
-- Google Cloud account
-- SSH key (`~/.ssh/id_ed25519.pub`)
+Kubernetes manifests & app deployment:  
+👉 https://github.com/Dans9881/infra-k3s
 
-## Usage
+---
+
+## ⚙️ Requirements
+
+- Terraform >= 1.0  
+- Google Cloud account  
+- `gcloud` CLI  
+- `gsutil`  
+- SSH key (`~/.ssh/id_ed25519.pub`)  
+
+---
+
+## ⚡ Quick Start
 
 ```bash
 # Clone repo
-git clone https://github.com/your-username/terraform-k3s
-cd terraform-k3s
+git clone https://github.com/Dans9881/terraform-k8s
+cd terraform-k8s
 
-# Copy example variables
-cp terraform.tfvars.example terraform.tfvars
+# Auth GCP
+gcloud auth application-default login
 
-# Edit sesuai kebutuhan
-nano terraform.tfvars
+# Create backend bucket (one-time)
+gsutil mb -p <PROJECT_ID> gs://danz-tf-state
 
-# Initialize Terraform
-terraform init
+# (Optional) set custom bucket
+export TF_BUCKET=danz-tf-state
 
-# Deploy infrastructure
+# Init environment
+bash scripts/init.sh dev
+
+# Edit variables
+nano environments/dev/terraform.tfvars
+
+# Deploy 🚀
+cd environments/dev
+terraform plan
 terraform apply

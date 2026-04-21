@@ -24,10 +24,10 @@ module "firewall" {
   environment = var.environment
   network     = module.network.network
 
-  public_ports          = var.public_ports
-  private_ports         = var.private_ports
-  public_source_ranges  = var.public_source_ranges
-  private_source_ranges = var.private_source_ranges
+  public_ports           = var.public_ports
+  private_ports          = var.private_ports
+  public_source_ranges   = var.public_source_ranges
+  private_source_ranges  = var.private_source_ranges
 
   target_tags = ["k8s"]
 }
@@ -61,10 +61,10 @@ module "vm_master" {
 
   tags = ["k8s", "master"]
 
-  repo_url           = var.repo_url
-  node_role          = "master"
+  repo_url  = var.repo_url
+  node_role = "master"
   tailscale_auth_key = var.tailscale_auth_key
-  environment        = var.environment
+  environment = var.environment
 }
 
 module "vm_worker" {
@@ -86,9 +86,9 @@ module "vm_worker" {
 
   tags = ["k8s", "worker"]
 
-  repo_url           = var.repo_url
-  node_role          = "worker"
-  master_ip          = module.vm_master.internal_ip
+  repo_url  = var.repo_url
+  node_role = "worker"
+  master_ip = module.vm_master.internal_ip
   tailscale_auth_key = var.tailscale_auth_key
-  environment        = var.environment
+  environment = var.environment
 }

@@ -3,7 +3,7 @@ region  = "asia-southeast1"
 zone    = "asia-southeast1-c"
 
 vm_name     = "k8s"
-environment = "dev"
+environment = "dev" # dev / staging / prod
 
 master_machine_type = "e2-standard-2"
 worker_machine_type = "e2-standard-2"
@@ -13,11 +13,16 @@ worker_disk_size = 50
 
 worker_count = 1
 
-source_ranges = ["0.0.0.0/0"]
-allowed_ports = ["22", "80", "443", "6443"]
+public_ports  = ["80", "443"]
+private_ports = ["22", "6443"]
+
+public_source_ranges  = ["0.0.0.0/0"]
+private_source_ranges = ["100.64.0.0/10"]
 
 repo_url = "https://github.com/your/repo.git"
 
 ssh_user         = "ubuntu"
 public_key_path  = "~/.ssh/id_ed25519.pub"
 private_key_path = "~/.ssh/id_ed25519"
+
+tailscale_auth_key = "tskey-xxxx"

@@ -18,11 +18,19 @@ variable "public_key" {
   type = string
 }
 
+variable "private_key" {
+  type = string
+}
+
 variable "tags" {
   type = list(string)
 }
 
 variable "network" {
+  type = string
+}
+
+variable "subnetwork" {
   type = string
 }
 
@@ -36,11 +44,12 @@ variable "disk_type" {
   default = "pd-standard"
 }
 
-variable "repo_url" {
-  type = string
+variable "image" {
+  type    = string
+  default = "ubuntu-os-cloud/ubuntu-2204-lts"
 }
 
-variable "subnetwork" {
+variable "repo_url" {
   type = string
 }
 
@@ -48,16 +57,17 @@ variable "node_role" {
   type = string
 }
 
-variable "node_token" {
-  type    = string
-  default = ""
-}
-
 variable "master_ip" {
   type    = string
   default = ""
 }
 
-variable "private_key" {
+variable "tailscale_auth_key" {
+  description = "Tailscale auth key"
+  type        = string
+  sensitive   = true
+}
+
+variable "environment" {
   type = string
 }

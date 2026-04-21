@@ -1,29 +1,27 @@
-variable "name" {
+variable "environment" {
   type = string
 }
 
 variable "network" {
-  type    = string
-  default = "default"
+  type = string
 }
 
-variable "ports" {
-  description = "List of ports to allow"
-  type        = list(string)
+variable "public_ports" {
+  type = list(string)
 }
 
-variable "source_ranges" {
-  description = "Allowed IP ranges"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+variable "private_ports" {
+  type = list(string)
+}
+
+variable "public_source_ranges" {
+  type = list(string)
+}
+
+variable "private_source_ranges" {
+  type = list(string)
 }
 
 variable "target_tags" {
-  description = "Target VM tags"
-  type        = list(string)
-}
-
-variable "protocol" {
-  type    = string
-  default = "tcp"
+  type = list(string)
 }

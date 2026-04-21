@@ -1,5 +1,27 @@
+# Default
+* text=auto
+
+# Terraform
 *.tf text eol=lf
 *.tfvars text eol=lf
+*.hcl text eol=lf
+
+# Scripts
 *.sh text eol=lf
+
+# Docs
 *.md text eol=lf
 *.txt text eol=lf
+
+# Templates
+*.tpl text eol=lf
+
+# Binary files (no conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.pem binary

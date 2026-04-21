@@ -1,13 +1,25 @@
-resource "google_compute_firewall" "allow" {
-  name    = "${var.name}-allow"
+resource "google_compute_firewall" "public" {
+  name    = "${var.environment}-public"
   network = var.network
 
   allow {
-    protocol = var.protocol
-    ports    = var.ports
+    protocol = "tcp"
+    ports    = var.public_ports
   }
 
-  source_ranges = var.source_ranges
+  source_ranges = var.public_source_ranges
+  target_tags   = var.target_tags
+}
 
-  target_tags = var.target_tags
+resource "google_compute_firewall" "private" {
+  name    = "${var.environment}-private"
+  network = var.network
+
+  allow {
+    protocol = "tcp"
+    ports    = var.private_ports
+  }
+
+  source_ranges = var.private_source_ranges
+  target_tags   = var.target_tags
 }
