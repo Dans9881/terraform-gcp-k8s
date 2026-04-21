@@ -1,28 +1,41 @@
-project = "your-project-id"
+# GCP CONFIG
+project = "your-gcp-project-id"
 region  = "asia-southeast1"
 zone    = "asia-southeast1-c"
 
+# GENERAL
 vm_name     = "k8s"
-environment = "dev" # dev / staging / prod
+environment = "staging"
 
+# MACHINE TYPE
 master_machine_type = "e2-standard-2"
 worker_machine_type = "e2-standard-2"
 
+# DISK
 master_disk_size = 30
 worker_disk_size = 50
 
+# CLUSTER
 worker_count = 1
 
-public_ports  = ["80", "443"]
+# FIREWALL
+public_ports  = ["22", "80", "443"]
 private_ports = ["22", "6443"]
 
-public_source_ranges  = ["0.0.0.0/0"]
-private_source_ranges = ["100.64.0.0/10"]
+public_source_ranges = ["0.0.0.0/0"]
 
-repo_url = "https://github.com/your/repo.git"
+private_source_ranges = [
+  "10.0.0.0/8",     # internal network
+  "100.64.0.0/10"   # tailscale
+]
 
-ssh_user         = "ubuntu"
+# APPLICATION
+repo_url = "https://github.com/your-username/your-repo.git"
+
+# SSH CONFIG
+ssh_user         = "your-user"
 public_key_path  = "~/.ssh/id_ed25519.pub"
 private_key_path = "~/.ssh/id_ed25519"
 
-tailscale_auth_key = "tskey-xxxx"
+# TAILSCALE (OPTIONAL)
+tailscale_auth_key = "your-tailscale-auth-key"
