@@ -12,3 +12,10 @@ output "ssh_workers" {
 output "master_internal_ip" {
   value = module.vm_master.internal_ip
 }
+
+output "worker_public_ips" {
+  value = [
+    for m in module.vm_worker :
+    m.public_ip
+  ]
+}

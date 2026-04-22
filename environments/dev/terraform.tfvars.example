@@ -3,35 +3,46 @@ project = "your-gcp-project-id"
 region  = "asia-southeast1"
 zone    = "asia-southeast1-c"
 
-# GENERAL
+# ENVIRONMENT
 vm_name     = "k8s"
 environment = "dev"
 
-# MACHINE TYPE
+# MACHINE CONFIG
 master_machine_type = "e2-standard-2"
 worker_machine_type = "e2-standard-2"
 
-# DISK
 master_disk_size = 30
 worker_disk_size = 50
 
-# CLUSTER
 worker_count = 1
 
-# FIREWALL
+# NETWORKING
 public_ports  = ["22", "80", "443"]
 private_ports = ["22", "6443"]
 
 public_source_ranges  = ["0.0.0.0/0"]
 private_source_ranges = ["0.0.0.0/0"]
 
-# APPLICATION
+subnet_cidr = "10.10.0.0/24"
+
+internal_source_ranges = [
+  "10.10.0.0/24"
+]
+
+target_tags = ["k8s"]
+
+# APP DEPLOYMENT
 repo_url = "https://github.com/your-username/your-repo.git"
 
 # SSH CONFIG
-ssh_user         = "your-user"
-public_key_path  = "~/.ssh/id_ed25519.pub"
-private_key_path = "~/.ssh/id_ed25519"
+ssh_user           = "your-user"
+public_key_path    = "/path/to/your/id_ed25519.pub"
+private_key_path   = "/path/to/your/id_ed25519"
 
-# TAILSCALE (OPTIONAL)
+# TAILSCALE
 tailscale_auth_key = "your-tailscale-auth-key"
+
+# CLOUDFLARE DNS
+zone_id              = "your-zone-id" # ambil dari dashboard Cloudflare
+domain               = "*"  # wildcard subdomain
+cloudflare_api_token = "your-cloudflare-api-token"

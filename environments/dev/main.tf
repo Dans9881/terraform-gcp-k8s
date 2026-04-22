@@ -1,4 +1,11 @@
 terraform {
+  required_providers {
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.0"
+    }
+  }
+
   backend "gcs" {
     # config provided via -backend-config
   }
@@ -8,6 +15,10 @@ provider "google" {
   project = var.project
   region  = var.region
   zone    = var.zone
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
 
 module "network" {
@@ -91,4 +102,20 @@ module "vm_worker" {
   master_ip          = module.vm_master.internal_ip
   tailscale_auth_key = var.tailscale_auth_key
   environment        = var.environment
+}
+
+module "dns" {
+  source = "../../modules/dns"
+
+  providers = {
+    cloudflare = cloudflare
+  }
+
+  zone_id = var.zone_id
+  domain  = var.domain
+
+  ips = [
+    for m in module.vm_worker :
+    m.public_ip
+  ]
 }

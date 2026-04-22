@@ -39,3 +39,8 @@ private_key_path = "~/.ssh/id_ed25519"
 
 # TAILSCALE (OPTIONAL)
 tailscale_auth_key = "your-tailscale-auth-key"
+
+# CLOUDFLARE DNS
+zone_id              = "your-zone-id" # ambil dari dashboard Cloudflare
+domain               = "*"  # wildcard subdomain
+cloudflare_api_token = "your-cloudflare-api-token"

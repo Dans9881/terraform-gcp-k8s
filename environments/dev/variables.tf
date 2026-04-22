@@ -88,3 +88,16 @@ variable "internal_source_ranges" {
 variable "target_tags" {
   type = list(string)
 }
+
+variable "zone_id" {
+  type = string
+}
+
+variable "domain" {
+  type = string
+}
+
+variable "cloudflare_api_token" {
+  type      = string
+  sensitive = true
+}
