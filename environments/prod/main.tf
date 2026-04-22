@@ -14,7 +14,7 @@ module "network" {
   source = "../../modules/network"
 
   name        = "${var.vm_name}-${var.environment}-vpc"
-  subnet_cidr = "10.10.0.0/24"
+  subnet_cidr = var.subnet_cidr
   region      = var.region
 }
 
@@ -24,12 +24,12 @@ module "firewall" {
   environment = var.environment
   network     = module.network.network
 
-  public_ports           = var.public_ports
-  private_ports          = var.private_ports
-  public_source_ranges   = var.public_source_ranges
-  private_source_ranges  = var.private_source_ranges
+  public_ports          = var.public_ports
+  private_ports         = var.private_ports
+  public_source_ranges  = var.public_source_ranges
+  private_source_ranges = var.private_source_ranges
 
-  target_tags = ["k8s"]
+  target_tags = var.target_tags
 }
 
 resource "google_compute_firewall" "internal" {
@@ -40,8 +40,8 @@ resource "google_compute_firewall" "internal" {
     protocol = "all"
   }
 
-  source_ranges = ["10.10.0.0/24"]
-  target_tags   = ["k8s"]
+  source_ranges = var.internal_source_ranges
+  target_tags   = var.target_tags
 }
 
 module "vm_master" {
@@ -59,12 +59,12 @@ module "vm_master" {
   public_key  = file(var.public_key_path)
   private_key = file(var.private_key_path)
 
-  tags = ["k8s", "master"]
+  tags = concat(var.target_tags, ["master"])
 
-  repo_url  = var.repo_url
-  node_role = "master"
+  repo_url           = var.repo_url
+  node_role          = "master"
   tailscale_auth_key = var.tailscale_auth_key
-  environment = var.environment
+  environment        = var.environment
 }
 
 module "vm_worker" {
@@ -84,11 +84,11 @@ module "vm_worker" {
   public_key  = file(var.public_key_path)
   private_key = file(var.private_key_path)
 
-  tags = ["k8s", "worker"]
+  tags = concat(var.target_tags, ["worker"])
 
-  repo_url  = var.repo_url
-  node_role = "worker"
-  master_ip = module.vm_master.internal_ip
+  repo_url           = var.repo_url
+  node_role          = "worker"
+  master_ip          = module.vm_master.internal_ip
   tailscale_auth_key = var.tailscale_auth_key
-  environment = var.environment
+  environment        = var.environment
 }

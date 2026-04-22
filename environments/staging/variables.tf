@@ -76,3 +76,15 @@ variable "public_source_ranges" {
 variable "private_source_ranges" {
   type = list(string)
 }
+
+variable "subnet_cidr" {
+  type = string
+}
+
+variable "internal_source_ranges" {
+  type = list(string)
+}
+
+variable "target_tags" {
+  type = list(string)
+}
