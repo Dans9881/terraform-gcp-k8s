@@ -42,9 +42,35 @@ wait_resource() {
   return 1
 }
 
+echo "=== FIX TIME SYNC ==="
+timedatectl set-ntp true || true
+apt update -y || true
+apt install -y systemd-timesyncd ca-certificates || true
+systemctl enable systemd-timesyncd || true
+systemctl restart systemd-timesyncd || true
+update-ca-certificates
+
+wait_time_sync() {
+  echo "=== WAIT TIME SYNC ==="
+  for i in {1..30}; do
+    if timedatectl status | grep -q "System clock synchronized: yes"; then
+      echo "Time synchronized OK"
+      timedatectl status
+      return 0
+    fi
+    echo "Waiting time sync ($i/30)..."
+    sleep 2
+  done
+
+  echo "Time sync FAILED, forcing fallback..."
+  hwclock -s || true
+  date -s "$(curl -sI https://google.com | grep -i '^date:' | cut -d' ' -f3-6)" || true
+}
+wait_time_sync
+
 echo "=== INSTALL DEPENDENCIES ==="
 retry 5 apt update -y
-retry 5 apt install -y curl git openssh-client ca-certificates
+retry 5 apt install -y curl git openssh-client
 
 case "${environment}" in
   dev)
@@ -388,6 +414,15 @@ nginx -t
 echo "=== START NGINX ==="
 systemctl restart nginx
 systemctl enable nginx
+
+echo "=== INSTALL DOCKER (RUNNER) ==="
+apt update
+apt install -y docker.io
+
+systemctl enable docker
+systemctl start docker
+
+usermod -aG docker ${ssh_user}
 
 fi
 
