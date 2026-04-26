@@ -245,6 +245,21 @@ EOF
     --set cgroup.hostRoot=/sys/fs/cgroup \
     --set k8s.requireIPv4PodCIDR=true
 
+# THIS FOR HALF NATIVE BUT NO TUNNEL!!
+#  cilium install \
+#    --set ipam.mode=kubernetes \
+#    --set routingMode=native \
+#    --set autoDirectNodeRoutes=false \
+#    --set ipv4NativeRoutingCIDR=10.42.0.0/16 \
+#    --set kubeProxyReplacement=true \
+#    --set bpf.masquerade=true \
+#    --set enableIPv4Masquerade=true \
+#    --set k8sServiceHost=$(hostname -I | awk '{print $1}') \
+#    --set k8sServicePort=6443 \
+#    --set securityContext.privileged=true \
+#    --set cgroup.autoMount.enabled=false \
+#    --set cgroup.hostRoot=/sys/fs/cgroup
+
   echo "=== WAIT CILIUM POD EXIST ==="
   wait_resource "CILIUM POD EXIST" \
     "kubectl get pods -n kube-system -l k8s-app=cilium --no-headers | grep -q ."
